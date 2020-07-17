@@ -1,0 +1,43 @@
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <div id="chart_div"></div>
+
+  <script>
+
+google.load('visualization', '1', {
+    packages: ['corechart', 'line']
+});
+google.setOnLoadCallback(drawBasic);
+
+function drawBasic() {
+
+    var data = new google.visualization.DataTable(),
+        dateFormatter = new google.visualization.DateFormat({formatType: 'short'});
+
+    data.addColumn('string', 'date time');
+    data.addColumn('number', 'temperature');
+    data.addColumn('number', 'humidity');
+
+    data.addRows([
+        {%for d in data%}
+            [dateFormatter.formatValue(new Date("{{d[0]}}")),{{d[1]}},{{d[2]}}] {%if d != data[-1]%} {{','}} {%endif%}
+        {%endfor%}
+    ]);
+
+    var options = {
+        hAxis: {
+        ticks: 10,
+            title: 'Time'
+
+        },
+        vAxis: {
+            title: 'Degrees Celsius'
+
+        },
+        curveType: 'function'
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+    chart.draw(data, options);
+}
+      </script>
